@@ -16,6 +16,7 @@ export const CV_DESIGN = {
       heading:  12,
       body:     10,
       jobTitle: 11,
+      contact:  10,
       meta:      8,
       small:     9,
     },

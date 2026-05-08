@@ -217,7 +217,7 @@ export function CVPreview({ cv, analysis: _analysis, onChange, onDeleteSkill }: 
         <div style={{ fontSize: `${D.fonts.sizes.name}pt`, fontWeight: 700, color: D.colors.dark, marginBottom: '4px' }}>
           {cv.meta.name}
         </div>
-        <div style={{ fontSize: `${D.fonts.sizes.meta}pt`, color: D.colors.mid }}>
+        <div style={{ fontSize: `${D.fonts.sizes.contact}pt`, color: D.colors.mid }}>
           {[cv.meta.email, cv.meta.phone, cv.meta.location].filter(Boolean).join('  |  ')}
           {(cv.meta.linkedin || cv.meta.github) && (
             <>

@@ -96,7 +96,7 @@ function buildHeader(meta: ResolvedCV['meta']): Paragraph[] {
         new TextRun({
           text: contactParts.join('  |  '),
           font: FONT,
-          size: D.fonts.sizes.meta * 2,
+          size: D.fonts.sizes.contact * 2,
           color: hexColor(MID),
         }),
       ],
