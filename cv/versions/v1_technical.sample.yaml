@@ -1,0 +1,15 @@
+id: v1_technical
+label: "Technical Depth & Platform Engineering"
+summary_variant: technical_variant
+
+experience:
+  acme_staff:
+    bullets: [acme_01, acme_02]
+  oldco_senior:
+    bullets: [oldco_01, oldco_02]
+
+skills:
+  - [skill_python, skill_terraform, skill_kubernetes]
+  - [skill_aws, skill_observability, skill_ci]
+
+projects: [proj_example]

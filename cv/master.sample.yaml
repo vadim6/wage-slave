@@ -1,0 +1,115 @@
+meta:
+  name: Jane Smith
+  email: jane@example.com
+  phone: "+1 555 000 0000"
+  location: San Francisco, CA
+  linkedin: linkedin.com/in/janesmith
+  github: github.com/janesmith
+  languages:
+    - English (native)
+    - Spanish (B2)
+
+summary:
+  leadership_variant: >
+    Engineering leader with 10+ years in platform and infrastructure, known for
+    building high-retention teams and scaling distributed systems. Promoted three
+    engineers to staff level; all still with the company. Deep enough technically
+    to pair on incidents, broad enough to own the roadmap.
+
+  technical_variant: >
+    Platform engineer with 10+ years experience in cloud infrastructure, CI/CD,
+    and observability. Hands-on across AWS, Kubernetes, and Terraform. Built
+    multi-region pipelines from scratch; reduced deploy time from 45 min to 8 min.
+    Currently exploring local LLM tooling and AI-assisted workflows.
+
+experience:
+  - id: acme_staff
+    company: Acme Corp
+    companyMeta: "B2B SaaS, 300 employees"
+    companyContext: "Series C at join; grew to $80M ARR"
+    title: Staff Platform Engineer
+    period: Jan 2021 – Present
+    duration: 3 yrs
+    location: Remote
+    bullets:
+      - id: acme_01
+        text: Led migration of 40 microservices from EC2 to EKS; reduced infra cost 35%.
+        tags:
+          domain: [platform, cloud, kubernetes]
+          signal: [impact, scale, cost]
+          keywords: [kubernetes, EKS, AWS, microservices, migration, cost reduction]
+
+      - id: acme_02
+        text: Designed and implemented multi-region active-active deployment with <30s failover.
+        tags:
+          domain: [reliability, architecture]
+          signal: [technical-depth, ownership]
+          keywords: [multi-region, failover, SRE, reliability, disaster recovery]
+
+      - id: acme_03
+        text: Mentored 4 engineers; 2 promoted to senior within 18 months.
+        tags:
+          domain: [leadership, mentorship]
+          signal: [people, growth]
+          keywords: [mentorship, promotion, team growth, coaching]
+
+  - id: oldco_senior
+    company: OldCo Inc
+    companyMeta: "E-commerce platform"
+    title: Senior DevOps Engineer
+    period: Mar 2018 – Dec 2020
+    duration: 2 yrs 9 mos
+    location: New York, NY
+    bullets:
+      - id: oldco_01
+        text: Built CI/CD pipeline (Jenkins → GitHub Actions) cutting release cycle from 2 weeks to daily.
+        tags:
+          domain: [devops, ci-cd]
+          signal: [impact, delivery]
+          keywords: [CI/CD, GitHub Actions, Jenkins, release, automation]
+
+      - id: oldco_02
+        text: Implemented centralized observability stack (Prometheus, Grafana, Loki) across 12 services.
+        tags:
+          domain: [observability, monitoring]
+          signal: [technical-depth, scale]
+          keywords: [Prometheus, Grafana, Loki, observability, monitoring]
+
+skills:
+  - id: skill_python
+    name: Python
+    tags: [languages, scripting]
+
+  - id: skill_terraform
+    name: Terraform
+    tags: [iac, cloud]
+
+  - id: skill_kubernetes
+    name: Kubernetes / EKS
+    tags: [orchestration, cloud]
+
+  - id: skill_aws
+    name: AWS
+    tags: [cloud, platform]
+
+  - id: skill_observability
+    name: Prometheus / Grafana
+    tags: [observability, monitoring]
+
+  - id: skill_ci
+    name: GitHub Actions / Jenkins
+    tags: [ci-cd, devops]
+
+projects:
+  - id: proj_example
+    name: OpenDeployKit
+    url: github.com/janesmith/opendeploykit
+    description: Open-source Kubernetes deploy helper. 200+ GitHub stars.
+    tags: [open-source, kubernetes, devops]
+    bullets:
+      - id: proj_example_01
+        text: Built and maintain CLI tool for zero-downtime K8s rollouts with automatic rollback.
+        tags:
+          domain: [open-source, devops]
+          signal: [technical-depth, ownership]
+          keywords: [kubernetes, CLI, rollout, rollback, open-source]

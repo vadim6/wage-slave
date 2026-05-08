@@ -1,0 +1,17 @@
+/node_modules
+/.next
+/out
+/build
+prisma/dev.db
+prisma/dev.db-journal
+prisma/dev.db-shm
+prisma/dev.db-wal
+/uploads
+.env.local
+.DS_Store
+tsconfig.tsbuildinfo
+
+# Personal CV data — add your own, use cv/master.sample.yaml as template
+cv/master.yaml
+cv/versions/*.yaml
+!cv/versions/*.sample.yaml
