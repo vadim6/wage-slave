@@ -13,7 +13,11 @@ export async function POST(request: NextRequest) {
   let rawText: string
   try {
     rawText = await scrapeUrl(url)
-  } catch {
+  } catch (err) {
+    const msg = err instanceof Error ? err.message : ''
+    if (msg === 'ashby_job_not_found') {
+      return NextResponse.json({ error: 'scrape_failed', message: 'Job not found in Ashby board listing (may be unlisted or expired). Try pasting the JD text manually.' }, { status: 422 })
+    }
     return NextResponse.json({ error: 'scrape_failed', message: 'Could not fetch the page. Try pasting the JD text manually.' }, { status: 422 })
   }
 
