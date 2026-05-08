@@ -26,6 +26,10 @@ function hexColor(hex: string): string {
   return hex.replace('#', '')
 }
 
+function hyperlinkRun(text: string, opts: { font: string; size: number }): TextRun {
+  return new TextRun({ ...opts, text, color: hexColor(ACCENT), underline: {} })
+}
+
 function inlineRuns(text: string, baseOpts: { font: string; size: number; color: string }): (TextRun | ExternalHyperlink)[] {
   const parts = text.split(/(\[[^\]]+\]\([^)]+\))/g)
   return parts.map(part => {
@@ -33,7 +37,7 @@ function inlineRuns(text: string, baseOpts: { font: string; size: number; color:
     if (m) {
       return new ExternalHyperlink({
         link: m[2],
-        children: [new TextRun({ ...baseOpts, text: m[1], style: 'Hyperlink' })],
+        children: [hyperlinkRun(m[1], { font: baseOpts.font, size: baseOpts.size })],
       })
     }
     return new TextRun({ ...baseOpts, text: part })
@@ -70,10 +74,30 @@ function sectionHeading(text: string): Paragraph[] {
   ]
 }
 
+function toAbsoluteUrl(val: string): string {
+  return val.startsWith('http') ? val : `https://${val}`
+}
+
 function buildHeader(meta: ResolvedCV['meta']): Paragraph[] {
-  const contactParts = [meta.email, meta.phone, meta.location]
-  if (meta.linkedin) contactParts.push(meta.linkedin)
-  if (meta.github) contactParts.push(meta.github)
+  const contactSize = D.fonts.sizes.contact * 2
+  const sep = new TextRun({ text: '  |  ', font: FONT, size: contactSize, color: hexColor(MID) })
+
+  const plainParts = [meta.email, meta.phone, meta.location].filter(Boolean)
+  const contactChildren: (TextRun | ExternalHyperlink)[] = [
+    new TextRun({ text: plainParts.join('  |  '), font: FONT, size: contactSize, color: hexColor(MID) }),
+  ]
+  if (meta.linkedin) {
+    contactChildren.push(sep, new ExternalHyperlink({
+      link: toAbsoluteUrl(meta.linkedin),
+      children: [hyperlinkRun(meta.linkedin, { font: FONT, size: contactSize })],
+    }))
+  }
+  if (meta.github) {
+    contactChildren.push(sep, new ExternalHyperlink({
+      link: toAbsoluteUrl(meta.github),
+      children: [hyperlinkRun(meta.github, { font: FONT, size: contactSize })],
+    }))
+  }
 
   return [
     new Paragraph({
@@ -92,14 +116,7 @@ function buildHeader(meta: ResolvedCV['meta']): Paragraph[] {
     new Paragraph({
       alignment: AlignmentType.CENTER,
       spacing: { before: 0, after: 20 },
-      children: [
-        new TextRun({
-          text: contactParts.join('  |  '),
-          font: FONT,
-          size: D.fonts.sizes.contact * 2,
-          color: hexColor(MID),
-        }),
-      ],
+      children: contactChildren,
     }),
     new Paragraph({
       alignment: AlignmentType.CENTER,
@@ -245,7 +262,7 @@ function buildProjects(projects: ResolvedProject[]): FileChild[] {
 
   for (const proj of projects) {
     const titleRun = proj.url
-      ? new ExternalHyperlink({ link: proj.url, children: [new TextRun({ text: proj.title, font: FONT, size: D.fonts.sizes.body * 2, bold: true, color: hexColor(DARK), style: 'Hyperlink' })] })
+      ? new ExternalHyperlink({ link: proj.url, children: [new TextRun({ text: proj.title, font: FONT, size: D.fonts.sizes.body * 2, bold: true, color: hexColor(ACCENT), underline: {} })] })
       : new TextRun({ text: proj.title, font: FONT, size: D.fonts.sizes.body * 2, bold: true, color: hexColor(DARK) })
     paras.push(
       new Paragraph({
