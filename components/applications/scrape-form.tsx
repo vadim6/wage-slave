@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
+import { SlotMachineLoader } from '@/components/ui/slot-machine-loader'
 import type { ScrapedJD } from '@/lib/types'
 import { SearchIcon, AlertCircleIcon } from 'lucide-react'
 
@@ -60,42 +61,42 @@ export function ScrapeForm({ onScraped }: ScrapeFormProps) {
           padding: '16px',
         }}
       >
-        <p style={{ fontSize: '13px', color: 'var(--color-muted)', marginBottom: '10px' }}>
-          Paste a job posting URL to auto-fill the form
-        </p>
-        <div style={{ display: 'flex', gap: '8px' }}>
-          <Input
-            value={url}
-            onChange={(e) => setUrl(e.target.value)}
-            placeholder="https://boards.greenhouse.io/..."
-            onKeyDown={(e) => { if (e.key === 'Enter') handleScrape() }}
-            style={{ flex: 1 }}
-          />
-          <Button variant="primary" onClick={handleScrape} disabled={loading || !url.trim()}>
-            {loading ? (
-              <span>Scraping...</span>
-            ) : (
-              <>
+        {loading ? (
+          <SlotMachineLoader variant="scrape" />
+        ) : (
+          <>
+            <p style={{ fontSize: '13px', color: 'var(--color-muted)', marginBottom: '10px' }}>
+              Paste a job posting URL to auto-fill the form
+            </p>
+            <div style={{ display: 'flex', gap: '8px' }}>
+              <Input
+                value={url}
+                onChange={(e) => setUrl(e.target.value)}
+                placeholder="https://boards.greenhouse.io/..."
+                onKeyDown={(e) => { if (e.key === 'Enter') handleScrape() }}
+                style={{ flex: 1 }}
+              />
+              <Button variant="primary" onClick={handleScrape} disabled={!url.trim()}>
                 <SearchIcon size={14} />
                 Scrape JD
-              </>
+              </Button>
+            </div>
+            {error && (
+              <div
+                style={{
+                  marginTop: '10px',
+                  display: 'flex',
+                  alignItems: 'flex-start',
+                  gap: '6px',
+                  color: '#fbbf24',
+                  fontSize: '13px',
+                }}
+              >
+                <AlertCircleIcon size={14} style={{ marginTop: '1px', flexShrink: 0 }} />
+                {error}
+              </div>
             )}
-          </Button>
-        </div>
-        {error && (
-          <div
-            style={{
-              marginTop: '10px',
-              display: 'flex',
-              alignItems: 'flex-start',
-              gap: '6px',
-              color: '#fbbf24',
-              fontSize: '13px',
-            }}
-          >
-            <AlertCircleIcon size={14} style={{ marginTop: '1px', flexShrink: 0 }} />
-            {error}
-          </div>
+          </>
         )}
       </div>
     </div>

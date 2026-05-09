@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { Button } from '@/components/ui/button'
+import { SlotMachineLoader } from '@/components/ui/slot-machine-loader'
 
 const VERSIONS = [
   { id: 'v1_technical',  label: 'Technical Depth & Platform Engineering' },
@@ -80,107 +81,108 @@ export function TailorCVButton({ applicationId }: TailorCVButtonProps) {
             }}
           >
             <h2 style={{ fontSize: '18px', fontWeight: 700, marginBottom: '6px' }}>Tailor CV</h2>
-            <p style={{ fontSize: '13px', color: 'var(--color-muted)', marginBottom: '20px' }}>
-              {useOllama
-                ? `Local Ollama (${ollamaModel || 'qwen2.5:14b'}) will score your CV bullets against this JD.`
-                : 'Claude will score your CV bullets against this JD and suggest rewrites. Takes ~10 seconds.'}
-            </p>
 
-            <label style={{ display: 'block', fontSize: '12px', fontWeight: 600, marginBottom: '8px', color: 'var(--color-text)' }}>
-              CV Version
-            </label>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', marginBottom: '20px' }}>
-              {VERSIONS.map(v => (
-                <label
-                  key={v.id}
-                  style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '10px',
-                    padding: '10px 14px',
-                    borderRadius: '8px',
-                    border: `2px solid ${versionId === v.id ? 'var(--color-accent)' : 'var(--color-border)'}`,
-                    backgroundColor: 'transparent',
-                    color: 'var(--color-text)',
-                    cursor: 'pointer',
-                    fontSize: '13px',
-                  }}
-                >
-                  <input
-                    type="radio"
-                    name="version"
-                    value={v.id}
-                    checked={versionId === v.id}
-                    onChange={() => setVersionId(v.id)}
-                    style={{ accentColor: 'var(--color-accent)' }}
-                  />
-                  {v.label}
+            {loading ? (
+              <SlotMachineLoader variant="tailor" />
+            ) : (
+              <>
+                <p style={{ fontSize: '13px', color: 'var(--color-muted)', marginBottom: '20px' }}>
+                  {useOllama
+                    ? `Local Ollama (${ollamaModel || 'qwen2.5:14b'}) will score your CV bullets against this JD.`
+                    : 'Claude will score your CV bullets against this JD and suggest rewrites. Takes ~10 seconds.'}
+                </p>
+
+                <label style={{ display: 'block', fontSize: '12px', fontWeight: 600, marginBottom: '8px', color: 'var(--color-text)' }}>
+                  CV Version
                 </label>
-              ))}
-            </div>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', marginBottom: '20px' }}>
+                  {VERSIONS.map(v => (
+                    <label
+                      key={v.id}
+                      style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '10px',
+                        padding: '10px 14px',
+                        borderRadius: '8px',
+                        border: `2px solid ${versionId === v.id ? 'var(--color-accent)' : 'var(--color-border)'}`,
+                        backgroundColor: 'transparent',
+                        color: 'var(--color-text)',
+                        cursor: 'pointer',
+                        fontSize: '13px',
+                      }}
+                    >
+                      <input
+                        type="radio"
+                        name="version"
+                        value={v.id}
+                        checked={versionId === v.id}
+                        onChange={() => setVersionId(v.id)}
+                        style={{ accentColor: 'var(--color-accent)' }}
+                      />
+                      {v.label}
+                    </label>
+                  ))}
+                </div>
 
-            <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '16px' }}>
-              <label style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer', fontSize: '13px' }}>
-                <input
-                  type="checkbox"
-                  checked={useOllama}
-                  onChange={e => setUseOllama(e.target.checked)}
-                  style={{ accentColor: 'var(--color-accent)', width: '14px', height: '14px' }}
-                />
-                Use local Ollama
-              </label>
-              {useOllama && (
-                <input
-                  type="text"
-                  value={ollamaModel}
-                  onChange={e => setOllamaModel(e.target.value)}
-                  placeholder="model name"
-                  style={{
-                    flex: 1,
+                <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '16px' }}>
+                  <label style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer', fontSize: '13px' }}>
+                    <input
+                      type="checkbox"
+                      checked={useOllama}
+                      onChange={e => setUseOllama(e.target.checked)}
+                      style={{ accentColor: 'var(--color-accent)', width: '14px', height: '14px' }}
+                    />
+                    Use local Ollama
+                  </label>
+                  {useOllama && (
+                    <input
+                      type="text"
+                      value={ollamaModel}
+                      onChange={e => setOllamaModel(e.target.value)}
+                      placeholder="model name"
+                      style={{
+                        flex: 1,
+                        fontSize: '12px',
+                        padding: '5px 8px',
+                        borderRadius: '6px',
+                        border: '1px solid var(--color-border)',
+                        backgroundColor: 'var(--color-surface)',
+                        color: 'var(--color-text)',
+                        fontFamily: 'monospace',
+                      }}
+                    />
+                  )}
+                </div>
+
+                {error && (
+                  <div style={{
                     fontSize: '12px',
-                    padding: '5px 8px',
+                    color: '#c0392b',
+                    backgroundColor: '#fdf0ee',
+                    border: '1px solid #e8b4ae',
                     borderRadius: '6px',
-                    border: '1px solid var(--color-border)',
-                    backgroundColor: 'var(--color-surface)',
-                    color: 'var(--color-text)',
-                    fontFamily: 'monospace',
-                  }}
-                />
-              )}
-            </div>
+                    padding: '10px 12px',
+                    marginBottom: '16px',
+                  }}>
+                    {error}
+                  </div>
+                )}
 
-            {error && (
-              <div style={{
-                fontSize: '12px',
-                color: '#c0392b',
-                backgroundColor: '#fdf0ee',
-                border: '1px solid #e8b4ae',
-                borderRadius: '6px',
-                padding: '10px 12px',
-                marginBottom: '16px',
-              }}>
-                {error}
-              </div>
+                <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '10px' }}>
+                  <Button variant="secondary" size="sm" onClick={() => setOpen(false)}>
+                    Cancel
+                  </Button>
+                  <Button
+                    size="sm"
+                    onClick={handleSubmit}
+                    style={{ backgroundColor: 'var(--color-accent)', color: '#fff', border: 'none', minWidth: '120px' }}
+                  >
+                    Start Tailoring
+                  </Button>
+                </div>
+              </>
             )}
-
-            <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '10px' }}>
-              <Button
-                variant="secondary"
-                size="sm"
-                onClick={() => setOpen(false)}
-                disabled={loading}
-              >
-                Cancel
-              </Button>
-              <Button
-                size="sm"
-                onClick={handleSubmit}
-                disabled={loading}
-                style={{ backgroundColor: 'var(--color-accent)', color: '#fff', border: 'none', minWidth: '120px' }}
-              >
-                {loading ? 'Tailoring…' : 'Start Tailoring'}
-              </Button>
-            </div>
           </div>
         </div>
       )}
