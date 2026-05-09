@@ -11,7 +11,7 @@ import { FileUpload } from '@/components/applications/file-upload'
 import { DeleteApplicationButton } from './delete-button'
 import { RawJdSection } from '@/components/applications/raw-jd-section'
 import { TailorCVButton } from '@/components/applications/tailor-cv-button'
-import { BuildingIcon, MapPinIcon, BriefcaseIcon, DollarSignIcon, LinkIcon, CalendarIcon, ExternalLinkIcon } from 'lucide-react'
+import { BuildingIcon, MapPinIcon, DollarSignIcon, CalendarIcon, ExternalLinkIcon, ChevronLeftIcon, ChevronRightIcon } from 'lucide-react'
 
 interface PageProps {
   params: Promise<{ id: string }>
@@ -31,6 +31,19 @@ export default async function ApplicationDetailPage({ params }: PageProps) {
   })
 
   if (!app) notFound()
+
+  const [prevApp, nextApp] = await Promise.all([
+    prisma.application.findFirst({
+      where: { id: { lt: app.id } },
+      orderBy: { id: 'desc' },
+      select: { id: true },
+    }),
+    prisma.application.findFirst({
+      where: { id: { gt: app.id } },
+      orderBy: { id: 'asc' },
+      select: { id: true },
+    }),
+  ])
 
   return (
     <div style={{ maxWidth: '900px' }}>
@@ -67,6 +80,60 @@ export default async function ApplicationDetailPage({ params }: PageProps) {
               <Button variant="secondary" size="sm">Edit</Button>
             </Link>
             <DeleteApplicationButton applicationId={app.id} />
+            <div style={{ display: 'flex', borderRadius: '8px', overflow: 'hidden', border: '1px solid var(--color-border)', marginLeft: '4px' }}>
+              {prevApp ? (
+                <Link
+                  href={`/applications/${prevApp.id}`}
+                  style={{
+                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                    width: '32px', height: '32px',
+                    backgroundColor: 'var(--color-surface)',
+                    color: 'var(--color-text)',
+                    borderRight: '1px solid var(--color-border)',
+                    transition: 'background-color 0.15s',
+                  }}
+                  title="Previous application"
+                >
+                  <ChevronLeftIcon size={15} />
+                </Link>
+              ) : (
+                <span style={{
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  width: '32px', height: '32px',
+                  backgroundColor: 'var(--color-surface)',
+                  color: 'var(--color-border)',
+                  borderRight: '1px solid var(--color-border)',
+                  cursor: 'default',
+                }}>
+                  <ChevronLeftIcon size={15} />
+                </span>
+              )}
+              {nextApp ? (
+                <Link
+                  href={`/applications/${nextApp.id}`}
+                  style={{
+                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                    width: '32px', height: '32px',
+                    backgroundColor: 'var(--color-surface)',
+                    color: 'var(--color-text)',
+                    transition: 'background-color 0.15s',
+                  }}
+                  title="Next application"
+                >
+                  <ChevronRightIcon size={15} />
+                </Link>
+              ) : (
+                <span style={{
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  width: '32px', height: '32px',
+                  backgroundColor: 'var(--color-surface)',
+                  color: 'var(--color-border)',
+                  cursor: 'default',
+                }}>
+                  <ChevronRightIcon size={15} />
+                </span>
+              )}
+            </div>
           </div>
         </div>
 
