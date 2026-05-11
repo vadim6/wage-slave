@@ -1,7 +1,7 @@
 'use client'
 
-import { useState } from 'react'
-import { useRouter } from 'next/navigation'
+import { useState, useEffect, Suspense } from 'react'
+import { useRouter, useSearchParams } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 import { SlotMachineLoader } from '@/components/ui/slot-machine-loader'
 
@@ -14,9 +14,14 @@ interface TailorCVButtonProps {
   applicationId: number
 }
 
-export function TailorCVButton({ applicationId }: TailorCVButtonProps) {
+function TailorCVButtonInner({ applicationId }: TailorCVButtonProps) {
   const router = useRouter()
+  const searchParams = useSearchParams()
   const [open, setOpen] = useState(false)
+
+  useEffect(() => {
+    if (searchParams.get('openTailor') === '1') setOpen(true)
+  }, [searchParams])
   const [versionId, setVersionId] = useState('v1_technical')
   const [useOllama, setUseOllama] = useState(false)
   const [ollamaModel, setOllamaModel] = useState('qwen2.5:14b')
@@ -187,5 +192,17 @@ export function TailorCVButton({ applicationId }: TailorCVButtonProps) {
         </div>
       )}
     </>
+  )
+}
+
+export function TailorCVButton({ applicationId }: TailorCVButtonProps) {
+  return (
+    <Suspense fallback={
+      <Button variant="secondary" size="sm" style={{ backgroundColor: 'var(--color-accent)', color: '#fff', border: 'none' }}>
+        Tailor CV
+      </Button>
+    }>
+      <TailorCVButtonInner applicationId={applicationId} />
+    </Suspense>
   )
 }
