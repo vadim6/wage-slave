@@ -171,15 +171,21 @@ export default async function ApplicationDetailPage({ params }: PageProps) {
             </span>
           </div>
           {app.jobUrl && (
-            <a
-              href={app.jobUrl}
-              target="_blank"
-              rel="noreferrer"
-              style={{ display: 'flex', alignItems: 'center', gap: '5px', fontSize: '13px', color: 'var(--color-accent)', marginLeft: 'auto', textDecoration: 'none' }}
-            >
-              <ExternalLinkIcon size={13} />
-              Job Posting
-            </a>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+              <span style={{ fontSize: '11px', color: 'var(--color-muted)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Job URL</span>
+              <a
+                href={app.jobUrl}
+                target="_blank"
+                rel="noreferrer"
+                title={app.jobUrl}
+                style={{ display: 'flex', alignItems: 'center', gap: '4px', fontSize: '13px', color: 'var(--color-accent)', textDecoration: 'none', maxWidth: '280px' }}
+              >
+                <ExternalLinkIcon size={12} style={{ flexShrink: 0 }} />
+                <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                  {(() => { try { return new URL(app.jobUrl).hostname.replace(/^www\./, '') } catch { return app.jobUrl } })()}
+                </span>
+              </a>
+            </div>
           )}
         </div>
       </div>
