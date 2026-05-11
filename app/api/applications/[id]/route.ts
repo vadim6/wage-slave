@@ -51,6 +51,8 @@ export async function PUT(
     priority,
     appliedAt,
     rawJd,
+    rejectReason,
+    followUpDate,
   } = body
 
   let resolvedCompanyId = companyId
@@ -84,6 +86,8 @@ export async function PUT(
         ...(priority !== undefined ? { priority } : {}),
         ...(appliedAt !== undefined ? { appliedAt: new Date(appliedAt) } : {}),
         ...(rawJd !== undefined ? { rawJd } : {}),
+        ...(rejectReason !== undefined ? { rejectReason } : {}),
+        ...(followUpDate !== undefined ? { followUpDate: followUpDate ? new Date(followUpDate) : null } : {}),
       },
       include: { company: true },
     }),

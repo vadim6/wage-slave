@@ -35,6 +35,9 @@ model Application {
 
   rawJd     String?
 
+  rejectReason String?
+  followUpDate DateTime?
+
   appliedAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -75,11 +78,12 @@ model Contact {
   applicationId Int
   application   Application @relation(fields: [applicationId], references: [id], onDelete: Cascade)
 
-  name     String
-  role     String?
-  email    String?
-  linkedin String?
-  notes    String?
+  name            String
+  role            String?
+  email           String?
+  linkedin        String?
+  notes           String?
+  lastContactedAt DateTime?
 }
 
 model Note {
