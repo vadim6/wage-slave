@@ -40,17 +40,31 @@ export default async function StudioPage({ params, searchParams }: PageProps) {
 
   if (!analysis) {
     return (
-      <div style={{ maxWidth: '600px', padding: '40px 0' }}>
-        <h1 style={{ fontSize: '20px', fontWeight: 700, marginBottom: '12px' }}>CV Studio</h1>
-        <p style={{ color: 'var(--color-muted)', marginBottom: '20px' }}>
-          No tailoring analysis found. Return to the application and click <strong>Tailor CV</strong> first.
+      <div style={{ maxWidth: '480px', padding: '60px 0', textAlign: 'center', margin: '0 auto' }}>
+        <div style={{ fontSize: '48px', marginBottom: '20px' }}>✦</div>
+        <h1 style={{ fontSize: '20px', fontWeight: 700, marginBottom: '10px' }}>No Analysis Yet</h1>
+        <p style={{ color: 'var(--color-muted)', marginBottom: '28px', lineHeight: '1.6', fontSize: '14px' }}>
+          Run a tailoring analysis first to see how your CV matches this role, get bullet relevance scores, and generate a custom DOCX.
         </p>
-        <Link
-          href={`/applications/${id}`}
-          style={{ color: 'var(--color-accent)', fontSize: '14px' }}
-        >
-          ← Back to application
-        </Link>
+        <div style={{ display: 'flex', gap: '12px', justifyContent: 'center' }}>
+          <Link
+            href={`/applications/${id}?openTailor=1`}
+            style={{
+              display: 'inline-flex', alignItems: 'center', gap: '6px',
+              backgroundColor: 'var(--color-accent)',
+              color: '#fff', fontSize: '14px', fontWeight: 500,
+              padding: '9px 18px', borderRadius: '6px', textDecoration: 'none',
+            }}
+          >
+            ✦ Run Tailoring Analysis
+          </Link>
+          <Link
+            href={`/applications/${id}`}
+            style={{ display: 'inline-flex', alignItems: 'center', color: 'var(--color-muted)', fontSize: '14px', textDecoration: 'none' }}
+          >
+            ← Back
+          </Link>
+        </div>
       </div>
     )
   }

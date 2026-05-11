@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button'
 import { Select } from '@/components/ui/input'
 import type { ApplicationFile } from '@prisma/client'
 import type { FileType } from '@/lib/types'
-import { UploadIcon, Trash2Icon, FileIcon, ExternalLinkIcon, LayoutDashboardIcon } from 'lucide-react'
+import { UploadIcon, Trash2Icon, FileIcon, ExternalLinkIcon, LayoutDashboardIcon, ChevronDownIcon, ChevronRightIcon, SparklesIcon } from 'lucide-react'
 import Link from 'next/link'
 import { ConfirmDialog } from '@/components/ui/dialog'
 
@@ -28,6 +28,7 @@ export function FileUpload({ applicationId, existingFiles = [], onFilesChange }:
   const [fileType, setFileType] = useState<FileType>('OTHER')
   const [deleteTarget, setDeleteTarget] = useState<ApplicationFile | null>(null)
   const [deleting, setDeleting] = useState(false)
+  const [aiExpanded, setAiExpanded] = useState(false)
   const inputRef = useRef<HTMLInputElement>(null)
 
   async function handleUpload(selectedFile: File) {
@@ -65,68 +66,99 @@ export function FileUpload({ applicationId, existingFiles = [], onFilesChange }:
     }
   }
 
+  const userFiles = files.filter(f => !f.label?.startsWith('Tailoring Analysis'))
+  const aiFiles = files.filter(f => f.label?.startsWith('Tailoring Analysis'))
+
+  function renderFileRow(f: ApplicationFile) {
+    return (
+      <div
+        key={f.id}
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          gap: '8px',
+          backgroundColor: 'var(--color-surface-2)',
+          border: '1px solid var(--color-border)',
+          borderRadius: '6px',
+          padding: '8px 12px',
+        }}
+      >
+        <FileIcon size={14} style={{ color: 'var(--color-muted)', flexShrink: 0 }} />
+        <span style={{ fontSize: '13px', flex: 1, minWidth: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', color: 'var(--color-text)' }}>
+          {f.label || f.filename}
+        </span>
+        <span style={{ fontSize: '11px', color: 'var(--color-muted)' }}>
+          {FILE_TYPE_LABELS[f.type as FileType]}
+        </span>
+        <span style={{ fontSize: '10px', color: 'var(--color-muted)', flexShrink: 0, fontVariantNumeric: 'tabular-nums' }}>
+          {new Date(f.createdAt).toLocaleString(undefined, { month: 'short', day: 'numeric', year: '2-digit', hour: '2-digit', minute: '2-digit', hour12: false })}
+        </span>
+        {f.label?.startsWith('Tailoring Analysis') ? (
+          <Link
+            href={(() => {
+              const part = f.label.split(' — ')[1] ?? ''
+              const versionId = part.startsWith('v') ? part : 'v1_technical'
+              return `/applications/${applicationId}/studio?analysisFileId=${f.id}&versionId=${versionId}`
+            })()}
+            style={{ color: 'var(--color-accent)', display: 'flex' }}
+            title="Open in CV Studio"
+          >
+            <LayoutDashboardIcon size={13} />
+          </Link>
+        ) : (
+          <a
+            href={`/api/files/${f.id}`}
+            target="_blank"
+            rel="noreferrer"
+            style={{ color: 'var(--color-muted)', display: 'flex' }}
+          >
+            <ExternalLinkIcon size={13} />
+          </a>
+        )}
+        <button
+          type="button"
+          onClick={() => setDeleteTarget(f)}
+          style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#f87171', display: 'flex', padding: 0 }}
+        >
+          <Trash2Icon size={13} />
+        </button>
+      </div>
+    )
+  }
+
   return (
     <div>
       <p style={{ fontSize: '13px', fontWeight: 500, color: 'var(--color-muted)', marginBottom: '10px' }}>
         Files
       </p>
 
-      {files.length > 0 && (
+      {userFiles.length > 0 && (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', marginBottom: '12px' }}>
-          {files.map((f) => (
-            <div
-              key={f.id}
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: '8px',
-                backgroundColor: 'var(--color-surface-2)',
-                border: '1px solid var(--color-border)',
-                borderRadius: '6px',
-                padding: '8px 12px',
-              }}
-            >
-              <FileIcon size={14} style={{ color: 'var(--color-muted)', flexShrink: 0 }} />
-              <span style={{ fontSize: '13px', flex: 1, minWidth: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', color: 'var(--color-text)' }}>
-                {f.label || f.filename}
-              </span>
-              <span style={{ fontSize: '11px', color: 'var(--color-muted)' }}>
-                {FILE_TYPE_LABELS[f.type as FileType]}
-              </span>
-              <span style={{ fontSize: '10px', color: 'var(--color-muted)', flexShrink: 0, fontVariantNumeric: 'tabular-nums' }}>
-                {new Date(f.createdAt).toLocaleString(undefined, { month: 'short', day: 'numeric', year: '2-digit', hour: '2-digit', minute: '2-digit', hour12: false })}
-              </span>
-              {f.label?.startsWith('Tailoring Analysis') ? (
-                <Link
-                  href={(() => {
-                    const part = f.label.split(' — ')[1] ?? ''
-                    const versionId = part.startsWith('v') ? part : 'v1_technical'
-                    return `/applications/${applicationId}/studio?analysisFileId=${f.id}&versionId=${versionId}`
-                  })()}
-                  style={{ color: 'var(--color-accent)', display: 'flex' }}
-                  title="Open in CV Studio"
-                >
-                  <LayoutDashboardIcon size={13} />
-                </Link>
-              ) : (
-                <a
-                  href={`/api/files/${f.id}`}
-                  target="_blank"
-                  rel="noreferrer"
-                  style={{ color: 'var(--color-muted)', display: 'flex' }}
-                >
-                  <ExternalLinkIcon size={13} />
-                </a>
-              )}
-              <button
-                type="button"
-                onClick={() => setDeleteTarget(f)}
-                style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#f87171', display: 'flex', padding: 0 }}
-              >
-                <Trash2Icon size={13} />
-              </button>
+          {userFiles.map(renderFileRow)}
+        </div>
+      )}
+
+      {aiFiles.length > 0 && (
+        <div style={{ marginBottom: '12px' }}>
+          <button
+            type="button"
+            onClick={() => setAiExpanded(v => !v)}
+            style={{
+              display: 'flex', alignItems: 'center', gap: '5px',
+              background: 'none', border: 'none', cursor: 'pointer',
+              color: 'var(--color-muted)', fontSize: '11px', padding: '4px 0',
+              marginBottom: aiExpanded ? '6px' : '0',
+            }}
+          >
+            {aiExpanded ? <ChevronDownIcon size={12} /> : <ChevronRightIcon size={12} />}
+            <SparklesIcon size={11} />
+            AI Artifacts ({aiFiles.length})
+          </button>
+          {aiExpanded && (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+              {aiFiles.map(renderFileRow)}
             </div>
-          ))}
+          )}
         </div>
       )}
 

@@ -165,9 +165,12 @@ export default async function ApplicationDetailPage({ params }: PageProps) {
           )}
           <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
             <span style={{ fontSize: '11px', color: 'var(--color-muted)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Applied</span>
-            <span style={{ display: 'flex', alignItems: 'center', gap: '4px', fontSize: '13px', color: 'var(--color-text)' }}>
+            <span style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '13px', color: 'var(--color-text)' }}>
               <CalendarIcon size={12} />
               {new Date(app.appliedAt).toLocaleDateString()}
+              <span style={{ fontSize: '11px', color: 'var(--color-muted)' }}>
+                ({Math.floor((Date.now() - new Date(app.appliedAt).getTime()) / 86400000)}d ago)
+              </span>
             </span>
           </div>
           {app.jobUrl && (

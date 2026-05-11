@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { Button } from '@/components/ui/button'
-import { PencilIcon } from 'lucide-react'
+import { PencilIcon, CopyIcon, CheckIcon } from 'lucide-react'
 
 interface RawJdSectionProps {
   applicationId: number
@@ -16,6 +16,13 @@ export function RawJdSection({ applicationId, initialValue }: RawJdSectionProps)
   const [draft, setDraft] = useState(initialValue)
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [copied, setCopied] = useState(false)
+
+  async function handleCopy() {
+    await navigator.clipboard.writeText(value)
+    setCopied(true)
+    setTimeout(() => setCopied(false), 2000)
+  }
 
   async function handleSave() {
     setSaving(true)
@@ -56,13 +63,24 @@ export function RawJdSection({ applicationId, initialValue }: RawJdSectionProps)
           Job Description
         </h2>
         {!editing && (
-          <button
-            onClick={() => { setDraft(value); setEditing(true) }}
-            style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--color-muted)', padding: '2px', display: 'flex', alignItems: 'center' }}
-            title="Edit"
-          >
-            <PencilIcon size={14} />
-          </button>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+            {value && (
+              <button
+                onClick={handleCopy}
+                style={{ background: 'none', border: 'none', cursor: 'pointer', color: copied ? '#34d399' : 'var(--color-muted)', padding: '2px', display: 'flex', alignItems: 'center' }}
+                title="Copy to clipboard"
+              >
+                {copied ? <CheckIcon size={14} /> : <CopyIcon size={14} />}
+              </button>
+            )}
+            <button
+              onClick={() => { setDraft(value); setEditing(true) }}
+              style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--color-muted)', padding: '2px', display: 'flex', alignItems: 'center' }}
+              title="Edit"
+            >
+              <PencilIcon size={14} />
+            </button>
+          </div>
         )}
       </div>
 
