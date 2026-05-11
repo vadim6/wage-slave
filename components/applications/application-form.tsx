@@ -354,7 +354,7 @@ export function ApplicationForm({ mode, companies, knownSources = [], initialDat
 
       <div style={{ display: 'flex', gap: '8px', justifyContent: 'flex-end' }}>
         <Button type="button" variant="secondary" onClick={() => router.back()}>
-          Cancel
+          Discard
         </Button>
         <Button type="submit" variant="primary" disabled={saving}>
           {saving ? 'Saving...' : mode === 'create' ? 'Save Application' : 'Update Application'}
